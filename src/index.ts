@@ -1,12 +1,14 @@
 import 'dotenv/config';
 import express from 'express';
+import bodyParser from 'body-parser';
+import todoRouter from './routes/todo';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.get('/', (req, res, next) => {
-  res.status(200).json({message: 'It works'});
-});
+app.use(bodyParser.json());
+
+app.use('/', todoRouter);
 
 
 app.listen(PORT, () => {
