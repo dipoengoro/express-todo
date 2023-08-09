@@ -1,47 +1,38 @@
 import {Request, Response} from 'express';
+import Todos from '../models/todos';
+import Todo from '../models/todo';
 
-interface Todo {
-  id: string;
-  todo: string;
-}
+const todos = new Todos();
 
-let todos: Todo[] = [
-  {
-    id: '1',
-    todo: 'First todo'
-  }
-];
 export const getAllTodo = (_req: Request, res: Response) => {
-  res.status(200).json({message: todos.length > 0 ? todos : 'Nothing in todos'});
+  res.status(200).json({message: todos.getAll.length > 0 ? todos : 'Nothing in todos'});
 };
 
 export const postTodo = (req: Request, res: Response) => {
-  const todo: Todo = {
-    id: req.body.id,
-    todo: req.body.todo
-  };
-  todos.push(todo);
-  res.status(200).json({message: `Success create todo: id: ${todo.id} todo: ${todo.todo}`});
+  const todo: Todo = new Todo(
+    req.body.id,
+    req.body.text
+  );
+  const postTodo = todos.addTodo(todo);
+  res.status(200).json({message: postTodo >= 0 ? `Success create todo: id: ${todo.id} todo: ${todo.text}` : 'Failed to post'});
 };
 
 export const getTodoById = (req: Request, res: Response) => {
-  const todo = todos.find(todo => todo.id === req.params.id);
-  res.status(200).json({message: typeof todo === 'undefined' ? `Cannot get todo by id: ${req.params.id}` : `Todo: id: ${todo.id} todo: ${todo.todo}`});
+  const {id} = req.params;
+  const todo = todos.findTodoById(id);
+  res.status(200).json({message: typeof todo === 'undefined' ? `Cannot get todo by id: ${req.params.id}` : `Todo: id: ${todo.id} todo: ${todo.text}`});
 };
 
 export const putTodoById = (req: Request, res: Response) => {
-  let todo = todos.find(todo => todo.id === req.params.id);
-  if (typeof todo === 'undefined') {
-    return res.status(404).json({message: `Cannot find todo with id: ${req.params.id}`});
-  }
-  todo.todo = req.body.todo;
-  todos.push(todo);
-  res.status(201).json({message: `Success update todo: id: ${todo.id} todo: ${todo.todo}`});
+  const {id} = req.params;
+  const {text} = req.body;
+  const updateTodo = todos.updateTodo(id, text);
+  res.status(201).json({message: updateTodo >= 0 ? `Success update todo: id: ${id} todo: ${text}` : 'Failed to update'});
 };
 
 export const deleteTodoById = (req: Request, res: Response) => {
   const {id} = req.params;
-  todos = todos.filter(todo => todo.id !== id);
-  res.status(200).json({message: `Success deleted todo: id: ${id}`});
+  const deleteTodo = todos.deleteTodoById(id);
+  res.status(200).json({message: deleteTodo >= 0 ? `Success deleted todo: id: ${id}` : 'Failed to delete'});
 };
 

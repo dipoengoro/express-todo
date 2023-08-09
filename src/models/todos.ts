@@ -12,11 +12,11 @@ class Todos {
   }
 
   findTodoById(todoId: string): Todo | undefined {
-    const todo = this._todos.find(todo => todo.id === todoId);
-    if (typeof todo === 'undefined') {
+    const foundTodo = this._todos.find(todo => todo.id === todoId);
+    if (!foundTodo) {
       return undefined;
     }
-    return todo;
+    return foundTodo;
   }
 
   deleteTodoById(todoId: string): number {
@@ -29,18 +29,35 @@ class Todos {
   }
 
   updateTodo(todoId: string, text: string): number {
-    const todo = this.findTodoById(todoId);
-    if (typeof todo === 'undefined') {
+    const foundTodo = this.findTodoById(todoId);
+    if (!foundTodo) {
       return -1;
     }
-    todo.setText(text);
+    const updateTodo = foundTodo.setText(text);
+    if (updateTodo < 0) {
+      return -2;
+    }
+    return 0;
+
+  }
+
+  addTodo(todo: Todo): number {
+    const {id} = todo;
+    const foundTodo = this._todos.find(todo => todo.id === id);
+    if (foundTodo) {
+      return -1;
+    }
+    if (todo.id === '' || todo.text === '') {
+      return -2;
+    }
     this._todos.push(todo);
     return 0;
   }
 
-  addTodo(todo: Todo): number {
-    this._todos.push(todo);
-    return 0;
+  toJSON() {
+    return {
+      todos: this._todos
+    };
   }
 }
 
