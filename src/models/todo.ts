@@ -3,8 +3,8 @@ class Todo {
 
   constructor(id: string, text: string) {
     if (id !== '' && text !== '') {
-      this.__id = id;
-      this._text = text;
+      this.__id = id.trim();
+      this._text = text.trim();
     } else {
       throw new Error('Both id and text cannot be empty');
     }
