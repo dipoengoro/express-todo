@@ -5,6 +5,8 @@ class Todo {
     if (id !== '' && text !== '') {
       this.__id = id;
       this._text = text;
+    } else {
+      throw new Error('Both id and text cannot be empty');
     }
   }
 
@@ -18,12 +20,11 @@ class Todo {
     return this.__id;
   }
 
-  setText(newText: string): number {
+  public setText(newText: string): void {
     if (newText === '') {
-      return -1;
+      throw new Error('newText cannot be empty');
     }
     this._text = newText.trim();
-    return 0;
   }
 
   toJSON() {
