@@ -38,3 +38,5 @@ class Todos {
     Todos._todos.push(todo);
   }
 }
+
+export default Todos;
