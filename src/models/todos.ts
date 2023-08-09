@@ -22,10 +22,10 @@ class Todos {
   deleteTodoById(todoId: string): number {
     const todoIndex = this._todos.findIndex(todo => todo.id === todoId);
     if (todoIndex === -1) {
-      return todoIndex;
+      return -1;
     }
     this._todos.splice(todoIndex, 1);
-    return 0;
+    return todoIndex;
   }
 
   updateTodo(todoId: string, text: string): number {
