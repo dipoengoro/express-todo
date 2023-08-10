@@ -130,7 +130,7 @@ describe('Todos', () => {
 
     const todosJSON = todos.toJSON();
     const actualJSON = {
-      todos: todosJSON.todos.map(todo => ({
+      todos: todosJSON.map(todo => ({
         _id: todo.id,
         text: todo.text,
       })),
