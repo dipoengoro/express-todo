@@ -123,8 +123,8 @@ describe('Todos', () => {
 
     const expectedJSON = {
       todos: [
-        {_id: '123', text: 'Buy groceries'},
-        {_id: '456', text: 'Walk the dog'},
+        {_id: todoId, text: todoText},
+        {_id: anotherTodoId, text: anotherTodoText},
       ],
     };
 

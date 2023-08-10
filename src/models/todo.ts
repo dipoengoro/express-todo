@@ -1,3 +1,6 @@
+import MyError from './my-error';
+import Default from '../util/default';
+
 class Todo {
   private readonly __id: string = '';
 
@@ -6,7 +9,7 @@ class Todo {
       this.__id = id.trim();
       this._text = text.trim();
     } else {
-      throw new Error('Both id and text cannot be empty');
+      throw new MyError(Default.MESSAGE_ID_TEXT_EMPTY, Default.ERROR_400);
     }
   }
 
@@ -22,7 +25,7 @@ class Todo {
 
   public setText(newText: string): void {
     if (newText === '') {
-      throw new Error('newText cannot be empty');
+      throw new MyError(Default.MESSAGE_TEXT_EMPTY, Default.ERROR_400);
     }
     this._text = newText.trim();
   }

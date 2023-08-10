@@ -1,9 +1,9 @@
 import Todo from '../models/todo';
+import Default from '../util/default';
+import MyError from './my-error';
 
 class Todos {
   private readonly _todos: Todo[];
-  private readonly TODO_NOT_FOUND_ERROR = 'Unable to retrieve the todo with the given ID.';
-  private readonly EMPTY_ID_TEXT_ERROR = 'Both id and text cannot be empty';
 
   constructor() {
     this._todos = [];
@@ -12,7 +12,7 @@ class Todos {
   findTodoById(todoId: string): Todo {
     const foundTodo = this._todos.find(todo => todo.id === todoId);
     if (!foundTodo) {
-      throw new Error(this.TODO_NOT_FOUND_ERROR);
+      throw new MyError(Default.MESSAGE_TODO_NOT_FOUND, Default.ERROR_400);
     }
     return foundTodo;
   }
@@ -20,13 +20,13 @@ class Todos {
   deleteTodoById(todoId: string): void {
     const todoIndex = this._todos.findIndex(todo => todo.id === todoId);
     if (todoIndex === -1) {
-      throw new Error(this.TODO_NOT_FOUND_ERROR);
+      throw new MyError(Default.MESSAGE_TODO_NOT_FOUND, Default.ERROR_400);
     }
     this._todos.splice(todoIndex, 1);
   }
 
   updateTodo(todoId: string, text: string): void {
-    this.validateIdText(todoId, text);
+    this.validateIdText(todoId);
     const foundTodo = this.findTodoById(todoId);
     if (foundTodo.text !== text) {
       foundTodo.setText(text);
@@ -34,11 +34,11 @@ class Todos {
   }
 
   addTodo(todo: Todo): void {
-    const {id, text} = todo;
-    this.validateIdText(id, text);
+    const {id} = todo;
+    this.validateIdText(id);
     const foundTodo = this._todos.find(todo => todo.id === id);
     if (foundTodo) {
-      throw new Error(this.TODO_NOT_FOUND_ERROR);
+      throw new MyError(Default.MESSAGE_TODO_NOT_FOUND, Default.ERROR_400);
     }
     this._todos.push(todo);
   }
@@ -48,14 +48,12 @@ class Todos {
   }
 
   toJSON() {
-    return {
-      todos: this._todos,
-    };
+    return this._todos;
   }
 
-  private validateIdText(id: string, text: string) {
-    if (id === '' || text === '') {
-      throw new Error(this.EMPTY_ID_TEXT_ERROR);
+  private validateIdText(id: string) {
+    if (id === '') {
+      throw new MyError(Default.MESSAGE_ID_EMPTY, Default.ERROR_400);
     }
   }
 }
